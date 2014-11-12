@@ -2,19 +2,19 @@ from datetime import datetime
 from bson import ObjectId
 
 
-class DuplicateStoreNameException(Exception):
-    def __init__(self, message='Store name already exits'):
-        Exception.__init__(self, message)
-
-
-class StoreService(object):
+class SiteService(object):
     def __init__(self, db):
         self.db = db
-        self.stores = self.db.store_collection
+        self.sites = self.db.site_collection
 
-    def search(self, tenant_id):
-        query = {"tenant_id": ObjectId(tenant_id)}
-        return [x for x in self.stores.find(query)]
+    def search(self, tenant_id,district_id=None):
+        query = {}
+        if tenant_id:
+            query["tenant_id"] = ObjectId(tenant_id)
+        if district_id:
+            query["district_id"] = ObjectId(district_id)
+
+        return [x for x in self.sites.find(query)]
 
     def save(self, store_item):
         if '_id' not in store_item or store_item['_id'] is None or store_item['_id'] == "-1":
@@ -23,19 +23,15 @@ class StoreService(object):
             store_item['status'] = True
         else:
             store_item['updated_at'] = datetime.now()
-
-        if self.check_duplicate_name(store_item['name'], store_item.get('_id', None)):
-            raise DuplicateStoreNameException()
-
-        return self.stores.save(store_item)
+        return self.sites.save(store_item)
 
     def get_by_name(self, name):
-        return self.stores.find_one({'name': name})
+        return self.sites.find_one({'name': name})
 
     def delete(self, _id):
-        item = self.stores.find_one({'_id': ObjectId(_id)})
+        item = self.sites.find_one({'_id': ObjectId(_id)})
         if item:
-            self.stores.remove(item)
+            self.sites.remove(item)
             return True
         return False
 
@@ -43,7 +39,7 @@ class StoreService(object):
         query = {'name': name}
         if _id:
             query['_id'] = {"$ne": ObjectId(_id)}
-        return self.stores.find(query).count() > 0
+        return self.sites.find(query).count() > 0
 
     def get_by_id(self, _id):
-        return self.stores.find_one({'_id': ObjectId(_id)})
+        return self.sites.find_one({'_id': ObjectId(_id)})
