@@ -31,7 +31,6 @@ class DistrictService(object):
             query['tenant_id'] = ObjectId(tenant_id)
         if distributor_id:
             query['distributor_id'] = ObjectId(distributor_id)
-        print(query)
         return [x for x in self.districts.find(query)]
 
     def delete(self, _id):

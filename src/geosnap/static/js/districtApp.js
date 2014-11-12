@@ -44,6 +44,11 @@ districtApp.controller('districtListCtrl', function($scope, $http, $routeParams)
 		}
 		return false
 	}
+
+	$scope.getDistributorName = function(id){
+	    var d =_.find($scope.distributors, {'_id': { '$oid': id }})
+	    return d ? d.name : id
+	}
 })
 
 districtApp.controller('districtDetailCtrl', function($scope, $routeParams, $location, $http, FileUploader){

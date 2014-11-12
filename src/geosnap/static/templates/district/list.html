@@ -28,11 +28,13 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
+                        <th>Distributor</th>
                         <th>Name</th>
                         <th class="text-center">Action</th>
                         </thead>
                         <tbody>
                         <tr ng-repeat="item in districts" ng-class="{'text-danger': !item.status}">
+                            <td>{{getDistributorName(item.distributor_id.$oid)}}</td>
                             <td><a href="#/district/{{item._id.$oid}}"
                                    title="Click to edit this item!">{{item.name}}</a></td>
                             <td class="text-center">
