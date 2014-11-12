@@ -3,7 +3,7 @@ var dealerApp = angular.module('geoSnapAdmin')
 dealerApp.controller('dealerListCtrl', function($scope, $http, $routeParams){
 	$scope.dealers = []
 	$scope.districts = []
-	$scope.selected_district_id = $routeParams.distributor_id || '';
+	$scope.selected_district_id = $routeParams.district_id || '';
 	$scope.selected_district_name = '';
 
 	$scope.reloadDealer = function(){
