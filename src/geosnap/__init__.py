@@ -88,6 +88,7 @@ def recreate_db():
 from geosnap.resources.user import UserApi, UserListApi
 from geosnap.resources.distributor import DistributorListApi, DistributorApi
 from geosnap.resources.district import DistrictApi, DistrictListApi
+from geosnap.resources.dealer import DealerApi, DealerListApi
 
 api.add_resource(UserApi, '/api/user/<string:_id>')
 api.add_resource(UserListApi, '/api/users')
@@ -97,3 +98,6 @@ api.add_resource(DistributorListApi, '/api/distributors')
 
 api.add_resource(DistrictApi, '/api/district/<string:_id>')
 api.add_resource(DistrictListApi, '/api/districts')
+
+api.add_resource(DealerApi, '/api/dealer/<string:_id>')
+api.add_resource(DealerListApi, '/api/dealers')

@@ -1,0 +1,107 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="dealerDetailCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/dealer" class="btn btn-default" title="Go back"><em
+                    class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmDealer.$invalid"><em
+                    class="fa fa-save"></em>&nbsp;Save
+            </button>
+        </div>
+        <span ng-if="model._id.$oid == '-1'">Add New Dealer</span>
+        <span ng-if="model._id.$oid != '-1'">Edit Dealer Details</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmDealer" id="frmDealer" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="name">Dealer Name</label>
+                        <input class="form-control" type="text" name="name" id="name" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmDealer.name.$invalid && !frmDealer.name.$pristine }"
+                               ng-model="model.name" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDealer.name.$dirty && frmDealer.name.$invalid">
+                            <li class="parsley-required" ng-show="frmDealer.name.$error.required">Dealer Name is
+                                required
+                            </li>
+                            <li class="parsley-required" ng-show="frmDealer.name.$error.minlength">Dealer Name is should
+                                be
+                                at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact_name">Contact Person Name</label>
+                        <input class="form-control" type="text" name="contact_name" id="contact_name" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmDealer.contact_name.$invalid && !frmDealer.contact_name.$pristine }"
+                               ng-model="model.contact_name" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDealer.contact_name.$dirty && frmDealer.contact_name.$invalid">
+                            <li class="parsley-required" ng-show="frmDealer.contact_name.$error.required">Contact Name
+                                is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmDealer.contact_name.$error.minlength">Contact Name
+                                is should be
+                                at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="phone">Phone</label>
+                        <input class="form-control" type="text" name="phone" id="phone" ng-minlength="6"
+                               ng-maxlength="10" maxlength="10"
+                               ng-class="{ 'parsley-error' : frmDealer.phone.$invalid && !frmDealer.phone.$pristine }"
+                               ng-model="model.phone" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDealer.phone.$dirty && frmDealer.phone.$invalid">
+                            <li class="parsley-required" ng-show="frmDealer.phone.$error.required">Phone is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmDealer.phone.$error.minlength">Phone number is
+                                should be
+                                at-least 6 characters
+                            </li>
+                            <li class="parsley-required" ng-show="frmDealer.phone.$error.maxlength">Phone number is
+                                should be less than or equal to 10 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="email">Email</label>
+                        <input class="form-control" type="email" name="email" id="email"
+                               ng-class="{ 'parsley-error' : frmDealer.email.$invalid && !frmDealer.email.$pristine }"
+                               ng-model="model.email" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDealer.email.$dirty && frmDealer.email.$invalid">
+                            <li class="parsley-required" ng-show="frmDealer.email.$error.required">Email
+                                is required
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="address">Address</label>
+                        <textarea class="form-control" name="address" id="address"
+                                  ng-class="{ 'parsley-error' : frmDealer.address.$invalid && !frmDealer.address.$pristine }"
+                                  ng-model="model.address"></textarea>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <a class="btn btn-default" href="#/dealer"
+                               title="Go back!">Cancel</a>
+                            <button class="btn btn-primary" type="submit" ng-disabled="frmDealer.$invalid"><em
+                                    class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

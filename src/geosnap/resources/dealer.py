@@ -2,21 +2,21 @@ from bson import ObjectId, json_util
 from flask import g, request
 from flask_restful import Resource
 from geosnap import mongo
-from geosnap.service.DistrictService import DistrictService
+from geosnap.service.DealerService import DealerService
 
 
-class DistrictListApi(Resource):
+class DealerListApi(Resource):
     def __init__(self):
-        self.service = DistrictService(mongo.db)
+        self.service = DealerService(mongo.db)
 
     def get(self):
-        distributor_id = request.args.get('distributor_id', None)
-        lst = self.service.search(tenant_id=g.user.tenant_id,distributor_id=distributor_id)
+        district_id = request.args.get('district_id', None)
+        lst = self.service.search(tenant_id=g.user.tenant_id,district_id=district_id)
         return lst
 
-class DistrictApi(Resource):
+class DealerApi(Resource):
     def __init__(self):
-        self.service = DistrictService(mongo.db)
+        self.service = DealerService(mongo.db)
 
     def get(self, _id):
         if _id == "-1":
@@ -27,29 +27,29 @@ class DistrictApi(Resource):
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = g.user.tenant_id
         item['tenant_id'] = ObjectId(tenant_id)
-        if item['distributor_id']:
-            item['distributor_id'] = ObjectId(item['distributor_id'])
+        if item['district_id']:
+            item['district_id'] = ObjectId(item['district_id'])
         try:
             self.service.update(item)
             return {"status": "success", "data": item}
         except Exception as e:
             print(e)
             return dict(status="error",
-                        message="Oops! Error while trying to save district details! Please try again later")
+                        message="Oops! Error while trying to save dealer details! Please try again later")
 
     def post(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = g.user.tenant_id
         item['tenant_id'] = ObjectId(tenant_id)
-        if item['distributor_id']:
-            item['distributor_id'] = ObjectId(item['distributor_id'])
+        if item['district_id']:
+            item['district_id'] = ObjectId(item['district_id'])
         try:
             _id = self.service.create(item)
-            return {"status": "success", "location": "/api/district/" + str(_id), "data": item}
+            return {"status": "success", "location": "/api/dealer/" + str(_id), "data": item}
         except Exception as e:
             print(e)
             return dict(status="error",
-                        message="Oops! Error while trying to save district details! Please try again later")
+                        message="Oops! Error while trying to save dealer details! Please try again later")
 
     def delete(self, _id):
         item = self.service.get_by_id(_id)
