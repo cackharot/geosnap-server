@@ -10,7 +10,8 @@ class DistrictListApi(Resource):
         self.service = DistrictService(mongo.db)
 
     def get(self):
-        lst = self.service.search(tenant_id=g.user.tenant_id)
+        distributor_id = request.args.get('distributor_id', None)
+        lst = self.service.search(tenant_id=g.user.tenant_id,distributor_id=distributor_id)
         return lst
 
 class DistrictApi(Resource):
@@ -26,6 +27,8 @@ class DistrictApi(Resource):
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = g.user.tenant_id
         item['tenant_id'] = ObjectId(tenant_id)
+        if item['distributor_id']:
+            item['distributor_id'] = ObjectId(item['distributor_id'])
         try:
             self.service.update(item)
             return {"status": "success", "data": item}
@@ -38,6 +41,8 @@ class DistrictApi(Resource):
         item = json_util.loads(request.data.decode('utf-8'))
         tenant_id = g.user.tenant_id
         item['tenant_id'] = ObjectId(tenant_id)
+        if item['distributor_id']:
+            item['distributor_id'] = ObjectId(item['distributor_id'])
         try:
             _id = self.service.create(item)
             return {"status": "success", "location": "/api/district/" + str(_id), "data": item}

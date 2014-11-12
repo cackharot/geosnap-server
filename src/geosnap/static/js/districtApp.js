@@ -2,16 +2,37 @@ var districtApp = angular.module('geoSnapAdmin')
 
 districtApp.controller('districtListCtrl', function($scope, $http, $routeParams){
 	$scope.districts = []
+	$scope.distributors = []
+	$scope.selected_distributor_id = $routeParams.distributor_id || '';
+	$scope.selected_distributor_name = '';
 
 	$scope.reloadDistrict = function(){
-        $http.get('/api/districts').success(function(d){
+        $http.get('/api/districts?distributor_id=' + $scope.selected_distributor_id).success(function(d){
             $scope.districts = d
         }).error(function(e){
             alert(e)
         })
 	}
 
-	$scope.reloadDistrict()
+	$http.get('/api/distributors').success(function(d){
+        $scope.distributors = d
+        if($scope.selected_distributor_id == ''){
+            $scope.setDistributor(d[0]._id.$oid)
+        }else{
+            $scope.setDistributor($scope.selected_distributor_id)
+        }
+        $scope.distributors.push({"_id":{"$oid":''}, 'name': 'All'})
+    }).error(function(e){
+        alert('Error while fetching distributors details')
+        $location.path('/district')
+    })
+
+    $scope.setDistributor = function(id){
+        $scope.selected_distributor_id = id
+        $scope.selected_distributor_name = _.find($scope.distributors, {'_id': { '$oid': id }}).name
+        $scope.reloadDistrict()
+    }
+
     $scope.deleteDistrict = function(id){
 		if(id && id != "-1"){
 			$http.delete('/api/district/'+id).success(function(d){
@@ -27,7 +48,7 @@ districtApp.controller('districtListCtrl', function($scope, $http, $routeParams)
 
 districtApp.controller('districtDetailCtrl', function($scope, $routeParams, $location, $http, FileUploader){
     var id = $routeParams.id || -1
-
+    $scope.distributor_id = $routeParams.distributor_id || ''
 	$scope.model = {}
 
     $http.get('/api/district/' + id).success(function(d){
@@ -46,6 +67,8 @@ districtApp.controller('districtDetailCtrl', function($scope, $routeParams, $loc
         }
 
         var item = angular.copy($scope.model)
+        if(!item.distributor_id)
+            item.distributor_id = $scope.distributor_id
 
         if(item._id.$oid == "-1"){
             item._id = null
