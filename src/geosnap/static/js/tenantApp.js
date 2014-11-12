@@ -1,4 +1,4 @@
-var tenantApp = angular.module('fbeaztAdmin')
+var tenantApp = angular.module('geoSnapAdmin')
 
 tenantApp.controller('tenantListCtrl', function($route, $scope, $http, $routeParams){
 	$scope.tenants = []

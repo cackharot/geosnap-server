@@ -1,4 +1,4 @@
-var storeApp = angular.module('fbeaztAdmin')
+var storeApp = angular.module('geoSnapAdmin')
 
 storeApp.controller('storeListCtrl', function($scope,$http){
 	$scope.stores = []

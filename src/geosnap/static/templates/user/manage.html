@@ -41,6 +41,16 @@
                         </ul>
                     </div>
                     <div class="form-group">
+                        <label class="control-label" for="password">Password</label>
+                        <input class="form-control" type="password" id="password" name="password"
+                               ng-class="{ 'parsley-error' : frmUser.password.$invalid && !frmUser.password.$pristine }"
+                               ng-model="model.password" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmUser.password.$dirty && frmUser.password.$invalid">
+                            <li class="parsley-required">Password is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label" for="phone">Phone</label>
                         <input class="form-control" type="text" id="phone" ng-maxlength="10"
                                name="phone"
@@ -63,6 +73,13 @@
                         <label class="control-label">Roles</label><br/>
                         <label ng-repeat="role in roles">
                             <input type="checkbox" checklist-model="model.roles" checklist-value="role.id"> {{role.text}}
+                            <span style="margin-left:15px;"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Distributors</label><br/>
+                        <label ng-repeat="d in distributors">
+                            <input type="checkbox" checklist-model="model.distributors" checklist-value="d._id.$oid"> {{d.name}}
                             <span style="margin-left:15px;"></span>
                         </label>
                     </div>

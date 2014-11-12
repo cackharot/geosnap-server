@@ -1,4 +1,4 @@
-var userApp = angular.module('fbeaztAdmin')
+var userApp = angular.module('geoSnapAdmin')
 
 userApp.controller('userListCtrl', function($route, $scope, $http, $routeParams, $window){
 	$scope.users = []
@@ -23,8 +23,8 @@ userApp.controller('userListCtrl', function($route, $scope, $http, $routeParams,
 
 userApp.controller('userDetailCtrl', function($scope, $http, $routeParams, $location){
 	$scope.model = {}
-	$scope.roles = [{'id': 'member', 'text': 'Member'}, {'id': 'tenant_admin', 'text': 'Tenant Admin'}]
-
+	$scope.distributors = []
+	$scope.roles = [{'id': 'admin', 'text': 'Admin'}]
 	$http.get('/api/user/'+ $routeParams.id).success(function(d){
         if(!d._id || !d._id.$oid)
             d._id = { "$oid": "-1" }
@@ -33,6 +33,13 @@ userApp.controller('userDetailCtrl', function($scope, $http, $routeParams, $loca
 	    alert('Error while fetching user details')
     	$location.path('/user')
 	})
+
+	$http.get('/api/distributors').success(function(d){
+        $scope.distributors = d
+    }).error(function(e){
+        alert('Error while fetching distributors details')
+        $location.path('/user')
+    })
 
 	$scope.save = function(){
 	    //console.log($scope.model)

@@ -1,0 +1,48 @@
+<div class="content-wrapper ng-fadeInUp" ng-class="app.viewAnimation" autoscroll="false"
+     ng-controller="districtDetailCtrl">
+    <h3>
+        <div class="pull-right">
+            <a href="#/district" class="btn btn-default" title="Go back"><em
+                    class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmDistrict.$invalid"><em
+                    class="fa fa-save"></em>&nbsp;Save
+            </button>
+        </div>
+        <span ng-if="model._id.$oid == '-1'">Add New District</span>
+        <span ng-if="model._id.$oid != '-1'">Edit District Details</span>
+    </h3>
+    <div class="row">
+        <form role="form" name="frmDistrict" id="frmDistrict" novalidate ng-submit="save()">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="name">Name</label>
+                        <input class="form-control" type="text" name="name" id="name" ng-minlength="4"
+                               ng-class="{ 'parsley-error' : frmDistrict.name.$invalid && !frmDistrict.name.$pristine }"
+                               ng-model="model.name" required/>
+
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDistrict.name.$dirty && frmDistrict.name.$invalid">
+                            <li class="parsley-required" ng-show="frmDistrict.name.$error.required">Name is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmDistrict.name.$error.minlength">Name is should be
+                                at-least 4 characters
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                    <div class="clearfix">
+                        <div class="pull-left"></div>
+                        <div class="pull-right">
+                            <a class="btn btn-default" href="#/district"
+                               title="Go back!">Cancel</a>
+                            <button class="btn btn-primary" type="submit" ng-disabled="frmDistrict.$invalid"><em
+                                    class="fa fa-save"></em>&nbsp;Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

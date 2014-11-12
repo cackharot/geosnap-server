@@ -50,6 +50,7 @@ class User(object):
 @app.before_request
 def set_user_on_request_g():
     if 'user_id' not in session:
+        setattr(g, 'user', User())
         return
     setattr(g, 'user',
             User(session['user_id'], session['tenant_id'], session['name'], session['email'], session['roles'],
@@ -85,6 +86,14 @@ def recreate_db():
 
 
 from geosnap.resources.user import UserApi, UserListApi
+from geosnap.resources.distributor import DistributorListApi, DistributorApi
+from geosnap.resources.district import DistrictApi, DistrictListApi
 
 api.add_resource(UserApi, '/api/user/<string:_id>')
 api.add_resource(UserListApi, '/api/users')
+
+api.add_resource(DistributorApi, '/api/distributor/<string:_id>')
+api.add_resource(DistributorListApi, '/api/distributors')
+
+api.add_resource(DistrictApi, '/api/district/<string:_id>')
+api.add_resource(DistrictListApi, '/api/districts')
