@@ -16,7 +16,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <label class="control-label" for="name">Name</label>
+                        <label class="control-label" for="name">Firm Name</label>
                         <input class="form-control" type="text" name="name" id="name" ng-minlength="4"
                                ng-class="{ 'parsley-error' : frmDistributor.name.$invalid && !frmDistributor.name.$pristine }"
                                ng-model="model.name" required/>
@@ -25,24 +25,57 @@
                             ng-show="frmDistributor.name.$dirty && frmDistributor.name.$invalid">
                             <li class="parsley-required" ng-show="frmDistributor.name.$error.required">Name is required
                             </li>
-                            <li class="parsley-required" ng-show="frmDistributor.name.$error.minlength">Name is should be
+                            <li class="parsley-required" ng-show="frmDistributor.name.$error.minlength">Name is should
+                                be
                                 at-least 4 characters
                             </li>
                         </ul>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label" for="contact_name">Contact Person Name</label>
+                        <input class="form-control" type="text" id="contact_name"
+                               name="contact_name"
+                               ng-class="{ 'parsley-error' : frmDistributor.contact_name.$invalid && !frmDistributor.contact_name.$pristine }"
+                               ng-model="model.contact_name" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDistributor.contact_name.$dirty && frmDistributor.contact_name.$invalid">
+                            <li class="parsley-required" ng-show="frmSite.contact_name.$error.required">Contact person
+                                name is required
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="address">Address</label>
+                        <textarea class="form-control" id="address" name="address"
+                                  ng-class="{ 'parsley-error' : frmDistributor.address.$invalid && !frmDistributor.address.$pristine }"
+                                  ng-model="model.address" required></textarea>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDistributor.address.$dirty && frmDistributor.address.$invalid">
+                            <li class="parsley-required">Address is required</li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="territory">Territory</label>
+                        <select name="territory" id="territory" ng-model="model.territory">
+                            <option>North</option>
+                            <option>South</option>
+                            <option>East</option>
+                            <option>West</option>
+                        </select>
+                    </div>
                     <div class="panel-footer">
-                    <div class="clearfix">
-                        <div class="pull-left"></div>
-                        <div class="pull-right">
-                            <a class="btn btn-default" href="#/distributor"
-                               title="Go back!">Cancel</a>
-                            <button class="btn btn-primary" type="submit" ng-disabled="frmDistributor.$invalid"><em
-                                    class="fa fa-save"></em>&nbsp;Save
-                            </button>
+                        <div class="clearfix">
+                            <div class="pull-left"></div>
+                            <div class="pull-right">
+                                <a class="btn btn-default" href="#/distributor"
+                                   title="Go back!">Cancel</a>
+                                <button class="btn btn-primary" type="submit" ng-disabled="frmDistributor.$invalid"><em
+                                        class="fa fa-save"></em>&nbsp;Save
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
         </form>
     </div>
 </div>
