@@ -15,7 +15,7 @@ def setup():
 
     item = user_service.get_by_email("admin@geosnap.in")
 
-    if item:
+    if not item:
         print("Create admin user")
         item = {"name": "admin", "username": 'admin', "email": 'admin@geosnap.in', "registered_ip": "10.0.0.1",
                 'roles': ['super_admin', 'admin'], 'password': 'pass@123'}
