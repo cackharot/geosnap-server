@@ -17,6 +17,11 @@ div.login {
     top: 0;
     width: 100%;
     z-index: 1051;
+    display:none;
+}
+
+div.login.show{
+    display:block;
 }
 
 .login-header {
