@@ -1,21 +1,26 @@
 from bson import ObjectId, json_util
 from flask import g, request
+from flask_login import login_required
 from flask_restful import Resource
 from geosnap import mongo
 from geosnap.service.SiteService import SiteService
 
 
 class SiteListApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = SiteService(mongo.db)
 
     def get(self):
         district_id = request.args.get('district_id', None)
-        lst = self.service.search(tenant_id=g.user.tenant_id,district_id=district_id)
+        lst = self.service.search(district_id=district_id)
         return lst
 
 
 class SiteApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = SiteService(mongo.db)
 
@@ -26,8 +31,6 @@ class SiteApi(Resource):
 
     def put(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = g.user.tenant_id
-        item['tenant_id'] = ObjectId(tenant_id)
         if item['district_id']:
             item['district_id'] = ObjectId(item['district_id'])
         try:
@@ -40,8 +43,6 @@ class SiteApi(Resource):
 
     def post(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = g.user.tenant_id
-        item['tenant_id'] = ObjectId(tenant_id)
         if item['district_id']:
             item['district_id'] = ObjectId(item['district_id'])
         try:

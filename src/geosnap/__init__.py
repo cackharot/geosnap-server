@@ -1,4 +1,5 @@
 from flask import Flask, session, render_template, make_response, request, redirect, g
+from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_pymongo import PyMongo
 from flask_restful import Api
 from pymongo import Connection
@@ -13,38 +14,37 @@ mongo = PyMongo(app)
 
 api = Api(app)
 
-
-def _logout(sender, user=None):
-    if request and 'user_id' in session:
-        session.pop('user_id')
-        session.pop('name')
-        session.pop('email')
-        session.pop('roles')
-    pass
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
-def _login(sender, user=None):
-    if request and 'openid' in session:
-        user = get_user(session['openid'])
-        session['user_id'] = str(user['_id'])
-        session['tenant_id'] = str(user['tenant_id'])
-        session['name'] = user['name']
-        session['email'] = user['email']
-        session['roles'] = user.get('roles', ['member'])
+@login_manager.user_loader
+def _login(user_id):
+    user = get_user(user_id)
+    setattr(g, 'user', user)
+    return user
 
 
 class User(object):
-    def __init__(self, user_id=None, tenant_id=None, name=None, email=None, roles=None, user_tenant_id=None,
-                 identity=None):
+    def __init__(self, user_id='', name='', email='', roles=[]):
         if not roles:
             roles = []
         self.user_id = user_id
-        self.tenant_id = tenant_id
         self.name = name
         self.email = email
         self.roles = roles
-        self.user_tenant_id = user_tenant_id
-        self.identity = identity
+
+    def is_authenticated(self):
+        return self.user_id is not None
+
+    def is_active(self):
+        return self.is_authenticated()
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.user_id
 
 
 @app.before_request
@@ -52,15 +52,14 @@ def set_user_on_request_g():
     if 'user_id' not in session:
         setattr(g, 'user', User())
         return
-    setattr(g, 'user',
-            User(session['user_id'], session['tenant_id'], session['name'], session['email'], session['roles'],
-                 session.get('user_tenant_id', None), session.get('identity', None)))
+    elif getattr(g,'user', None) is None:
+        _login(session['user_id'])
 
 
-def get_user(item):
+def get_user(_id):
     service = UserService(mongo.db)
-    user = service.get_by_email(item['email'])
-    return user
+    user = service.get_by_id(_id)
+    return User(str(user['_id']), user['name'], user['email'], user['roles'])
 
 
 @api.representation('application/json')
@@ -75,6 +74,27 @@ def mjson(data, code, headers=None):
 def index():
     name = session.get('name', None)
     return render_template('index.jinja2', name=name)
+
+
+@app.route('/login', methods=["POST"])
+def login():
+    username = request.json['username']
+    password = request.json['password']
+    if username and password:
+        service = UserService(mongo.db)
+        if service.validate_user(username, password):
+            user = service.get_by_email(username)
+            login_user(
+                User(str(user['_id']), user['name'], user['email'], user['roles']))
+            return json.dumps({'id': str(user['_id']), 'name': user['name'], 'status': user['status']})
+    return "Invalid credentials", 400
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return '', 200
 
 
 @app.route("/recreatedb")

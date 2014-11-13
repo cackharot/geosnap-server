@@ -6,47 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title data-ng-bind="pageTitle()">GeoSnap Admin</title>
     <link rel="stylesheet" href="{{url_for('static',filename='css/admin.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
     <!-- Fonts -->
     <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
 </head>
 
-<body data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed }">
-    <div data-autoscroll="false" data-ng-class="mainViewAnimation" class="wrapper" ng-controller="mainCtrl">
-        <div ng-include="app.layout.top_nav_url"></div>
-        <aside class="aside" ng-include="app.layout.aside_nav_url"></aside>
-        <section>
-            <div ng-include="app.layout.content_url"></div>
-        </section>
-    </div>
+<body data-ng-class="{ 'layout-fixed' : app.layout.isFixed, 'aside-collapsed' : app.layout.isCollapsed }"
+      ng-controller="mainCtrl">
+<div data-autoscroll="false" class="wrapper">
+    <div ng-include="app.layout.top_nav_url"></div>
+    <aside class="aside" ng-include="app.layout.aside_nav_url" ng-show="!app.layout.isCollapsed"></aside>
+    <section>
+        <div ng-include="app.layout.content_url"></div>
+    </section>
+</div>
 
-    <!-- Core JavaScript Files -->
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/lodash.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-sanitize.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-messages.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/angular-file-upload.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/checklist-model.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/ga.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/admin_app.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/userApp.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/distributorApp.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/districtApp.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/dealerApp.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/siteApp.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/directives.js') }}"></script>
-    <script>
+<div id="loginBox" class="login" ng-show="app.show_login">
+    <!--<div class="login-header">
+        <button type="button" class="close" data-dismiss="modal" ng-click="app.show_login=false"><span
+                aria-hidden="true">&times;</span><span
+                class="sr-only">Close</span></button>
+    </div>-->
+    <div class="login-body">
+        <h2>Login</h2>
+        <div class="line"></div>
+        <form ng-submit="doLogin()">
+            <div class="form-group">
+                <label for="username">Email</label>
+                <input type="email" id="username" class="form-control" name="username"
+                       ng-model="app.login.username" required/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" name="password"
+                       ng-model="app.login.password" required/>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-info">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Core JavaScript Files -->
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/lodash.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-route.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-cookies.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-sanitize.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-resource.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-messages.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/angular-file-upload.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/checklist-model.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ga.js') }}"></script>
+<script src="{{ url_for('static', filename='js/filters.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/userApp.js') }}"></script>
+<script src="{{ url_for('static', filename='js/distributorApp.js') }}"></script>
+<script src="{{ url_for('static', filename='js/districtApp.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dealerApp.js') }}"></script>
+<script src="{{ url_for('static', filename='js/siteApp.js') }}"></script>
+<script src="{{ url_for('static', filename='js/directives.js') }}"></script>
+<script>
         app_user = {};
-        app_user.id = "{{session.get('user_id')}}";
-        app_user.name = "{{session.get('name')}}";
+        app_user.id = "{{g.user.user_id}}";
+        app_user.name = "{{g.user.name}}";
         window.app_user = app_user;
-    </script>
+
+</script>
 </body>
 
 </html>

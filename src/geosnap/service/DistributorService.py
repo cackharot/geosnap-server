@@ -25,10 +25,8 @@ class DistributorService(object):
     def get_by_name(self, name):
         return [x for x in self.distributors.find({'name': name})]
 
-    def search(self, tenant_id):
+    def search(self):
         query = {}
-        if tenant_id:
-            query['tenant_id'] = ObjectId(tenant_id)
         return [x for x in self.distributors.find(query)]
 
     def delete(self, _id):

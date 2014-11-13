@@ -25,10 +25,8 @@ class DealerService(object):
     def get_by_name(self, name):
         return [x for x in self.dealers.find({'name': name})]
 
-    def search(self, tenant_id=None,district_id=None):
+    def search(self, district_id=None):
         query = {}
-        if tenant_id:
-            query['tenant_id'] = ObjectId(tenant_id)
         if district_id:
             query['district_id'] = ObjectId(district_id)
         return [x for x in self.dealers.find(query)]

@@ -1,20 +1,23 @@
 from bson import json_util, ObjectId
 from flask import request, session, g
+from flask_login import login_required
 from flask_restful import Resource
 from geosnap import mongo, UserService
 from geosnap.service.UserService import UserServiceException, DuplicateUserException
 
-
 class UserListApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = UserService(mongo.db)
 
     def get(self):
-        lst = self.service.search(tenant_id=g.user.tenant_id)
+        lst = self.service.search()
         return lst
 
-
 class UserApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = UserService(mongo.db)
 
@@ -25,9 +28,7 @@ class UserApi(Resource):
 
     def put(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = session.get('tenant_id', None)
         item['username'] = item['email']
-        item['tenant_id'] = ObjectId(tenant_id)
         try:
             self.service.update(item)
             return {"status": "success",  "data": item}
@@ -41,9 +42,7 @@ class UserApi(Resource):
 
     def post(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = session.get('tenant_id', None)
         item['username'] = item['email']
-        item['tenant_id'] = ObjectId(tenant_id)
         item['registered_ip'] = request.remote_addr
         try:
             print(item)

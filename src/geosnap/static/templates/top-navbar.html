@@ -3,10 +3,12 @@
     <div class="navbar-header">
         <a class="navbar-brand" href="#/">
             <div class="brand-logo">
-                <h2>Geo<small>Snap</small></h2>
+                <h2>Geo
+                    <small>Snap</small>
+                </h2>
             </div>
             <div class="brand-logo-collapsed">
-                <h2>Geo<small>Snap</small></h2>
+                <h2>Gs</h2>
             </div>
         </a>
     </div>
@@ -15,7 +17,7 @@
     <div class="nav-wrapper">
         <ul class="nav navbar-nav">
             <li>
-                <a class="hidden-xs" ng-click="app.layout.isCollapsed = !app.layout.isCollapsed" href="#">
+                <a class="hidden-xs" ng-click="app.layout.isCollapsed = !app.layout.isCollapsed" href>
                     <em class="fa fa-bars"></em>
                 </a>
                 <a class="visible-xs sidebar-toggle" no-persist="no-persist" toggle-state="aside-toggled" href="#"></a>
@@ -23,7 +25,11 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a href="#">
+                <a ng-show="app.user.name==''" id="btnShowLogin" href ng-click="app.show_login=!app.show_login">
+                    <em class="fa fa-sign-in"></em>
+                    Login
+                </a>
+                <a href ng-show="app.user.name!=''">
                     <em class="fa fa-user"></em>
                     {{ app.user.name }}
                 </a>
@@ -34,8 +40,9 @@
                 </a>
             </li>
             <li class="dropdown dropdown-list">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+                <a class="dropdown-toggle" data-toggle="dropdown" href aria-haspopup="true" aria-expanded="false">
                     <em class="fa fa-bell"></em>
+
                     <div class="label label-danger">11</div>
                 </a>
                 <ul class="dropdown-menu animated flipInX">
@@ -48,8 +55,8 @@
                     </li>
                 </ul>
             </li>
-            <li>
-                <a title="Sing out of admin area" href="/logout">
+            <li ng-show="app.user.user_id!=''">
+                <a title="Sing out of admin area" href ng-click="doLogout()">
                     <em class="fa fa-sign-out"></em>
                 </a>
             </li>

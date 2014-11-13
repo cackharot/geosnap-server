@@ -1,20 +1,25 @@
 from bson import ObjectId, json_util
 from flask import g, request
+from flask_login import login_required
 from flask_restful import Resource
 from geosnap import mongo
 from geosnap.service.DealerService import DealerService
 
 
 class DealerListApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = DealerService(mongo.db)
 
     def get(self):
         district_id = request.args.get('district_id', None)
-        lst = self.service.search(tenant_id=g.user.tenant_id,district_id=district_id)
+        lst = self.service.search(district_id=district_id)
         return lst
 
 class DealerApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = DealerService(mongo.db)
 
@@ -25,8 +30,6 @@ class DealerApi(Resource):
 
     def put(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = g.user.tenant_id
-        item['tenant_id'] = ObjectId(tenant_id)
         if item['district_id']:
             item['district_id'] = ObjectId(item['district_id'])
         try:
@@ -39,8 +42,6 @@ class DealerApi(Resource):
 
     def post(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = g.user.tenant_id
-        item['tenant_id'] = ObjectId(tenant_id)
         if item['district_id']:
             item['district_id'] = ObjectId(item['district_id'])
         try:

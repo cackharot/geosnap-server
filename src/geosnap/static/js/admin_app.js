@@ -37,12 +37,15 @@ geoSnapAdmin.config(['$routeProvider', function($routeProvider){
 	}
     $rootScope.location = $location
 	$rootScope.$on('$routeChangeSuccess', function( event, current, previous ){
+
     })
 })
 
 
 geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams){
 	$scope.app = {}
+	$scope.app.login = { 'username': '', 'password': ''}
+	$scope.app.show_login = false
 	$scope.app.viewAnimation = true
 	$scope.app.page = {}
 	$scope.app.layout = {}
@@ -59,7 +62,38 @@ geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams
 	    $scope.app.layout.content_url = content_url
 	}
 
+	if(!$scope.app.user.name)
+    {
+        $scope.app.show_login = true
+    }
+
 	$scope.$on("$routeChangeSuccess", function( $currentRoute, $previousRoute ){
 	    render($currentRoute)
     })
+
+    $scope.doLogin = function() {
+        if($scope.app.login.username && $scope.app.login.password){
+            $http.post('/login', {'username': $scope.app.login.username, 'password': $scope.app.login.password})
+            .success(function(data){
+                $scope.app.user = data
+                $scope.app.show_login = false
+            })
+            .error(function(e){
+                alert(e)
+            })
+        }else{
+            alert('Username and password are required!')
+        }
+    }
+
+    $scope.doLogout = function(){
+        $http.get('/logout')
+        .success(function(data){
+            $scope.app.user = {}
+            $scope.app.show_login = true
+        })
+        .error(function(e){
+            alert(e)
+        })
+    }
 })

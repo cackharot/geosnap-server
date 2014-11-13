@@ -7,13 +7,10 @@ class SiteService(object):
         self.db = db
         self.sites = self.db.site_collection
 
-    def search(self, tenant_id,district_id=None):
+    def search(self, district_id=None):
         query = {}
-        if tenant_id:
-            query["tenant_id"] = ObjectId(tenant_id)
         if district_id:
             query["district_id"] = ObjectId(district_id)
-
         return [x for x in self.sites.find(query)]
 
     def save(self, store_item):

@@ -1,75 +1,38 @@
-.summary {
-    position: relative;
+.aside-collapsed .wrapper > footer, .aside-collapsed .wrapper > section {
+    margin-left:0px;
 }
 
-.bubble {
-    position: relative;
-    background: none repeat scroll 0% 0% #333;
-    min-height: 100px;
-    border-bottom: 3px solid #FE5815;
-    color:#fff;
+.brand-logo-collapsed > h2{
+margin:5px;
+color:#fff;
 }
 
-.summary .bubble h3 {
-    color: #FE5815;
-    font-size: 1.063em;
-    font-weight: bold;
-    border-bottom: 1px solid #6A6869;
-    padding: 10px 0px 8px 13px;
-    margin:0;
-}
 
-.summary .bubble div.section {
-    border-bottom: 1px solid #6A6869;
-    padding: 10px 15px;
-}
-
-.summary .bubble .section {
-    margin-bottom: 0px;
-}
-
-.summary .bubble div.total {
-    border-bottom: 0px none;
-    padding: 6px 15px;
-}
-
-.summary .bubble div.continue {
-    padding: 6px 15px;
-    text-align: right;
-}
-
-.summary .bubble .section ul {
-    list-style: outside none none;
-}
-
-.summary .bubble .section li.currency {
-    color: #FFF;
-    font-size: 0.888em;
-    font-weight: bold;
-}
-
-.summary .bubble .section li.price {
-    color: #FE5815;
-    font-size: 1.25em;
-    font-weight: bold;
-}
-
-.summary .bubble .section li {
-    text-align: right;
-}
-
-.summary .bubble div.items-list {
-/*    border-top: 1px solid #6A6869;*/
-}
-
-.summary .bubble table {
+div.login {
+    background-color: #23b7e5;
+    background-image: linear-gradient(to right, #23b7e5 0px, #51c6ea 100%);
+    height: 100%;
+    opacity: 1.0;
+    position: absolute;
+    top: 0;
     width: 100%;
+    z-index: 1051;
 }
 
-.summary .bubble .section thead th {
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1.275em;
-    color: #FFF;
-    padding-bottom: 5px;
+.login-header {
+    display: block;
+    height: 40px;
+    padding: 10px;
+}
+
+.login-body {
+    background: none repeat scroll 0 0 #fff;
+    margin: 10% auto 0;
+    padding: 20px;
+    width: 30%;
+    border-radius: 8px;
+}
+
+.login-body > h2 {
+    margin: 0 0 20px;
 }

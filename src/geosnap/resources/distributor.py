@@ -1,19 +1,24 @@
 from bson import ObjectId, json_util
 from flask import g, request
+from flask_login import login_required
 from flask_restful import Resource
 from geosnap import mongo
 from geosnap.service.DistributorService import DistributorService
 
 
 class DistributorListApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = DistributorService(mongo.db)
 
     def get(self):
-        lst = self.service.search(tenant_id=g.user.tenant_id)
+        lst = self.service.search()
         return lst
 
 class DistributorApi(Resource):
+    method_decorators = [login_required]
+
     def __init__(self):
         self.service = DistributorService(mongo.db)
 
@@ -24,8 +29,6 @@ class DistributorApi(Resource):
 
     def put(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = g.user.tenant_id
-        item['tenant_id'] = ObjectId(tenant_id)
         try:
             self.service.update(item)
             return {"status": "success", "data": item}
@@ -36,8 +39,6 @@ class DistributorApi(Resource):
 
     def post(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))
-        tenant_id = g.user.tenant_id
-        item['tenant_id'] = ObjectId(tenant_id)
         try:
             _id = self.service.create(item)
             return {"status": "success", "location": "/api/distributor/" + str(_id), "data": item}

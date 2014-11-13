@@ -5,6 +5,7 @@ from bson import ObjectId
 class DuplicateUserException(Exception):
     def __init__(self, message='User name/email already exits'):
         Exception.__init__(self, message)
+
     pass
 
 
@@ -35,10 +36,12 @@ class UserService(object):
     def get_by_email(self, email):
         return self.users.find_one({"email": email})
 
-    def search(self, tenant_id=None):
+    def validate_user(self, username, password):
+        query = {'email': username, 'password': password}
+        return self.users.find(query).count() > 0
+
+    def search(self):
         query = {}
-        if tenant_id:
-            query['tenant_id'] = ObjectId(tenant_id)
         return [x for x in self.users.find(query)]
 
     def delete(self, id):
