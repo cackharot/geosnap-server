@@ -14,6 +14,8 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                         <th>Name</th>
+                        <th>Contact Person</th>
+                        <th>Territory</th>
                         <th class="text-center">Manage District</th>
                         <th class="text-center">Action</th>
                         </thead>
@@ -21,6 +23,8 @@
                         <tr ng-repeat="item in distributors" ng-class="{'text-danger': !item.status}">
                             <td><a href="#/distributor/{{item._id.$oid}}"
                                    title="Click to edit this item!">{{item.name}}</a></td>
+                            <td>{{item.contact_name}}</td>
+                            <td>{{item.territory}}</td>
                             <td class="text-center">
                                 <a ng-if="item.status" href="#/district?distributor_id={{item._id.$oid}}" title="Click to manage districts"><em
                                         class="fa fa-wrench"></em></a>
