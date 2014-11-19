@@ -46,13 +46,16 @@ class User(object):
     def get_id(self):
         return self.user_id
 
+    def is_super_admin(self):
+        return self.roles and len(self.roles) > 0 and "super_admin" in self.roles
+
 
 @app.before_request
 def set_user_on_request_g():
     if 'user_id' not in session:
         setattr(g, 'user', User())
         return
-    elif getattr(g,'user', None) is None:
+    elif getattr(g, 'user', None) is None:
         _login(session['user_id'])
 
 
@@ -88,7 +91,8 @@ def login():
             user = service.get_by_email(username)
             login_user(
                 User(str(user['_id']), user['name'], user['email'], user['roles']))
-            return json.dumps({'id': str(user['_id']), 'name': user['name'], 'status': user['status']})
+            return json.dumps(
+                {'id': str(user['_id']), 'name': user['name'], 'roles': user['roles'], 'status': user['status']})
     return "Invalid credentials", 400
 
 

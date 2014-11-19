@@ -2,9 +2,9 @@ var geoSnapAdmin = angular.module('geoSnapAdmin',['ngRoute', 'ngSanitize', 'ngCo
 
 var menuItems = []
 menuItems.push({"title": "Main", "heading": true })
-menuItems.push({"title": "User", "heading": false, "url": "/user", "icon": "fa fa-user", "templateUrl": '/static/templates/user/list.html'})
-menuItems.push({"title": "Distributors", "heading": false, "url": "/distributor", "icon": "fa fa-users", "templateUrl": '/static/templates/distributor/list.html'})
-menuItems.push({"title": "Districts", "heading": false, "url": "/district", "icon": "fa fa-building", "templateUrl": '/static/templates/district/list.html'})
+menuItems.push({"title": "User", "heading": false, "url": "/user", "icon": "fa fa-user", "templateUrl": '/static/templates/user/list.html', roles: ['super_admin']})
+menuItems.push({"title": "Distributors", "heading": false, "url": "/distributor", "icon": "fa fa-users", "templateUrl": '/static/templates/distributor/list.html', roles: ['super_admin']})
+menuItems.push({"title": "Districts", "heading": false, "url": "/district", "icon": "fa fa-building", "templateUrl": '/static/templates/district/list.html', roles: ['super_admin']})
 menuItems.push({"title": "Dealers", "heading": false, "url": "/dealer", "icon": "fa fa-apple", "templateUrl": '/static/templates/dealer/list.html'})
 menuItems.push({"title": "Sites", "heading": false, "url": "/site", "icon": "fa fa-apple", "templateUrl": '/static/templates/site/list.html'})
 
@@ -15,12 +15,28 @@ custom_routes.push({"title": "Manage District", "heading": false, "url": "/distr
 custom_routes.push({"title": "Manage Dealer", "heading": false, "url": "/dealer/:id", "templateUrl": '/static/templates/dealer/manage.html'})
 custom_routes.push({"title": "Manage Site", "heading": false, "url": "/site/:id", "templateUrl": '/static/templates/site/manage.html'})
 
+var isAccessible = function(roles){
+    if(roles && roles.length > 0){
+        var user_roles = window.app_user.roles || []
+        var valid = true
+        _.forEach(roles, function(x){
+            valid = valid && _.contains(user_roles, x)
+        })
+        return valid
+    }
+    return true
+}
+
 geoSnapAdmin.config(['$routeProvider', function($routeProvider){
     var items = menuItems.concat(custom_routes)
 
 	for(var i=0; i < items.length; ++i){
         var item = items[i]
         if(item.heading) continue
+        if(!isAccessible(item.roles)) {
+            continue
+        }
+
         $routeProvider.when(item.url,{
         		action: item.templateUrl,
         		title : item.title
@@ -55,7 +71,13 @@ geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams
 	$scope.app.layout.top_nav_url = "static/templates/top-navbar.html"
 	$scope.app.layout.aside_nav_url = "static/templates/aside-navbar.html"
 	$scope.app.layout.content_url = ""
-    $scope.menuItems = menuItems
+    $scope.menuItems = []
+
+    $scope.updateMenus = function(){
+        $scope.menuItems = _.filter(menuItems,function(item){ return isAccessible(item.roles); })
+    }
+
+    $scope.updateMenus()
 
 	render = function($currentRoute){
 	    var content_url = $route.current.action
@@ -76,7 +98,10 @@ geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams
             $http.post('/login', {'username': $scope.app.login.username, 'password': $scope.app.login.password})
             .success(function(data){
                 $scope.app.user = data
+                window.app_user = data
+                $scope.updateMenus()
                 $scope.app.show_login = false
+                //window.location.reload()
             })
             .error(function(e){
                 alert(e)

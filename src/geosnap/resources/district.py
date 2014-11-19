@@ -2,7 +2,7 @@ from bson import ObjectId, json_util
 from flask import g, request
 from flask_login import login_required
 from flask_restful import Resource
-from geosnap import mongo
+from geosnap import mongo, UserService
 from geosnap.service.DistrictService import DistrictService
 
 
@@ -11,10 +11,20 @@ class DistrictListApi(Resource):
 
     def __init__(self):
         self.service = DistrictService(mongo.db)
+        self.user_service = UserService(mongo.db)
 
     def get(self):
+        distributor_ids = []
         distributor_id = request.args.get('distributor_id', None)
-        lst = self.service.search(distributor_id=distributor_id)
+        if distributor_id:
+            distributor_ids.append(distributor_id)
+
+        if not g.user.is_super_admin():
+            user = self.user_service.get_by_id(g.user.get_id())
+            if 'distributors' in user and not (distributor_id and distributor_id in user['distributors']):
+                distributor_ids = user['distributors']
+
+        lst = self.service.search(distributor_ids=distributor_ids)
         return lst
 
 class DistrictApi(Resource):

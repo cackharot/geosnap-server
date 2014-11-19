@@ -24,7 +24,12 @@ class UserApi(Resource):
     def get(self, _id):
         if _id == "-1" or _id is None:
             return {}
-        return self.service.get_by_id(_id)
+        user = self.service.get_by_id(_id)
+
+        if not 'distributors' in user:
+            user['distributors'] = []
+
+        return user
 
     def put(self, _id):
         item = json_util.loads(request.data.decode('utf-8'))

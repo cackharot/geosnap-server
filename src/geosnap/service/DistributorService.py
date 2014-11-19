@@ -25,8 +25,10 @@ class DistributorService(object):
     def get_by_name(self, name):
         return [x for x in self.distributors.find({'name': name})]
 
-    def search(self):
+    def search(self, ids=None):
         query = {}
+        if ids and len(ids) > 0:
+            query['_id'] = {"$in": [ObjectId(x) for x in ids]}
         return [x for x in self.distributors.find(query)]
 
     def delete(self, _id):
