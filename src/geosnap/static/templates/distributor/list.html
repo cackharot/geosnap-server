@@ -15,6 +15,7 @@
                         <thead>
                         <th>Name</th>
                         <th>Contact Person</th>
+                        <th>Mobile</th>
                         <th>Territory</th>
                         <th class="text-center">Manage District</th>
                         <th class="text-center">Action</th>
@@ -24,6 +25,7 @@
                             <td><a href="#/distributor/{{item._id.$oid}}"
                                    title="Click to edit this item!">{{item.name}}</a></td>
                             <td>{{item.contact_name}}</td>
+                            <td>{{item.mobile}}</td>
                             <td>{{item.territory}}</td>
                             <td class="text-center">
                                 <a ng-if="item.status" href="#/district?distributor_id={{item._id.$oid}}" title="Click to manage districts"><em

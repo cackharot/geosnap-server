@@ -2,7 +2,7 @@
      ng-controller="districtDetailCtrl">
     <h3>
         <div class="pull-right">
-            <a href="#/district" class="btn btn-default" title="Go back"><em
+            <a href="#/district?distributor_id={{model.distributor_id.$oid}}" class="btn btn-default" title="Go back"><em
                     class="fa fa-arrow-left"></em>&nbsp;Back</a>
             <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmDistrict.$invalid"><em
                     class="fa fa-save"></em>&nbsp;Save
@@ -30,11 +30,37 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="panel-footer">
+                    <div class="form-group">
+                        <label class="control-label" for="current_center">Add Consumption Center</label>
+
+                        <div class="input-group">
+                            <input class="form-control" type="text" name="current_center" id="current_center"
+                                   ng-model="current_center"/>
+                            <span class="input-group-btn">
+                                <button type="button" ng-click="addCenter()" class="btn btn-info"><i
+                                        class="fa fa-plus"></i>&nbsp;Add
+                                </button>
+                            </span>
+                        </div>
+                        <br/>
+                        <h4>Consumption Centers:</h4>
+                        <ul ng-repeat="item in model.centers">
+                            <li>
+                                <div style="display:inline-block;min-width:150px;">
+                                    {{item}}
+                                </div>
+                                <a href ng-click="removeCenter(item)" title="Click to remove the center">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel-footer">
                     <div class="clearfix">
                         <div class="pull-left"></div>
                         <div class="pull-right">
-                            <a class="btn btn-default" href="#/district"
+                            <a class="btn btn-default" href="#/district?distributor_id={{model.distributor_id.$oid}}"
                                title="Go back!">Cancel</a>
                             <button class="btn btn-primary" type="submit" ng-disabled="frmDistrict.$invalid"><em
                                     class="fa fa-save"></em>&nbsp;Save

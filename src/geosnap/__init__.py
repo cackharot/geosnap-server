@@ -59,6 +59,8 @@ def set_user_on_request_g():
 def get_user(_id):
     service = UserService(mongo.db)
     user = service.get_by_id(_id)
+    if not user:
+        return User()
     return User(str(user['_id']), user['name'], user['email'], user['roles'])
 
 

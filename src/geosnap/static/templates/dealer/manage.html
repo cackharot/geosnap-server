@@ -2,7 +2,7 @@
      ng-controller="dealerDetailCtrl">
     <h3>
         <div class="pull-right">
-            <a href="#/dealer" class="btn btn-default" title="Go back"><em
+            <a href="#/dealer?district_id={{model.district_id.$oid}}" class="btn btn-default" title="Go back"><em
                     class="fa fa-arrow-left"></em>&nbsp;Back</a>
             <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmDealer.$invalid"><em
                     class="fa fa-save"></em>&nbsp;Save
@@ -15,6 +15,12 @@
         <form role="form" name="frmDealer" id="frmDealer" novalidate ng-submit="save()">
             <div class="panel panel-default">
                 <div class="panel-body">
+                    <div class="form-group">
+                        <label class="control-label" for="center">Choose Consumption Center</label>
+                        <select class="form-control" name="center" id="center" ng-model="model.center">
+                            <option ng-repeat="item in consumption_centers">{{item}}</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label class="control-label" for="name">Dealer Name</label>
                         <input class="form-control" type="text" name="name" id="name" ng-minlength="4"
@@ -93,7 +99,7 @@
                     <div class="clearfix">
                         <div class="pull-left"></div>
                         <div class="pull-right">
-                            <a class="btn btn-default" href="#/dealer"
+                            <a class="btn btn-default" href="#/dealer?district_id={{model.district_id.$oid}}"
                                title="Go back!">Cancel</a>
                             <button class="btn btn-primary" type="submit" ng-disabled="frmDealer.$invalid"><em
                                     class="fa fa-save"></em>&nbsp;Save

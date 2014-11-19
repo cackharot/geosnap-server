@@ -23,14 +23,16 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="item in users">
-                            <td><a href="#/user/{{item._id.$oid}}" title="Click to edit this user!">{{item.name}}</a>
+                            <td>
+                                <a ng-show="canEdit(item.roles)" href="#/user/{{item._id.$oid}}" title="Click to edit this user!">{{item.name}}</a>
+                                <span ng-show="!canEdit(item.roles)">{{item.name}}</span>
                             </td>
                             <td>{{item.email}}</td>
                             <td>{{item.phone}}</td>
                             <td>{{item.roles.join(",")}}</td>
                             <td>{{item.created_at | datetime}}</td>
                             <td class="text-center">
-                                <a href="#/user" ng-click="deleteUser(item._id.$oid)"><em class="fa fa-times"></em></a>
+                                <a ng-show="canEdit(item.roles)" href="#/user" ng-click="deleteUser(item._id.$oid)"><em class="fa fa-times"></em></a>
                             </td>
                         </tr>
                         </tbody>

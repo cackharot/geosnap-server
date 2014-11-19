@@ -21,7 +21,7 @@ districtApp.controller('districtListCtrl', function($scope, $http, $routeParams)
         }else{
             $scope.setDistributor($scope.selected_distributor_id)
         }
-        $scope.distributors.push({"_id":{"$oid":''}, 'name': 'All'})
+        //$scope.distributors.push({"_id":{"$oid":''}, 'name': 'All'})
     }).error(function(e){
         alert('Error while fetching distributors details')
         $location.path('/district')
@@ -54,16 +54,39 @@ districtApp.controller('districtListCtrl', function($scope, $http, $routeParams)
 districtApp.controller('districtDetailCtrl', function($scope, $routeParams, $location, $http, FileUploader){
     var id = $routeParams.id || -1
     $scope.distributor_id = $routeParams.distributor_id || ''
-	$scope.model = {}
+	$scope.model = { 'centers': [], 'distributor_id' : { '$oid': $scope.distributor_id } }
+	$scope.current_center = ''
 
     $http.get('/api/district/' + id).success(function(d){
-        if(!d._id || !d._id.$oid)
+        if(!d._id || !d._id.$oid) {
             d._id = { "$oid": "-1" }
+            d.distributor_id = { '$oid': $scope.distributor_id }
+        }
+        if(!d.centers) d.centers = []
         $scope.model = d
     }).error(function(e){
         alert('Error while fetching district details')
         $location.path('/district')
     })
+
+    $scope.addCenter = function(){
+        var item = $scope.current_center
+        if(item && item.trim().length > 0){
+            if(_.contains($scope.model.centers, item)) {
+                alert('Already exists')
+            }else{
+                $scope.model.centers.push(item.trim())
+            }
+        }
+    }
+
+    $scope.removeCenter = function(item){
+        if(_.contains($scope.model.centers, item)) {
+            _.remove($scope.model.centers, function(x){
+                return x === item
+            })
+        }
+    }
 
     $scope.save = function(){
         if($scope.frmDistrict.$invalid){

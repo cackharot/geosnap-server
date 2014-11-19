@@ -39,8 +39,23 @@
                                ng-model="model.contact_name" required/>
                         <ul class="parsley-errors-list filled"
                             ng-show="frmDistributor.contact_name.$dirty && frmDistributor.contact_name.$invalid">
-                            <li class="parsley-required" ng-show="frmSite.contact_name.$error.required">Contact person
+                            <li class="parsley-required" ng-show="frmDistributor.contact_name.$error.required">Contact person
                                 name is required
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="mobile">Contact Mobile</label>
+                        <input class="form-control" type="text" id="mobile"
+                               name="mobile" maxlength="10"
+                               ng-class="{ 'parsley-error' : frmDistributor.mobile.$invalid && !frmDistributor.mobile.$pristine }"
+                               ng-model="model.mobile" required/>
+                        <ul class="parsley-errors-list filled"
+                            ng-show="frmDistributor.mobile.$dirty && frmDistributor.mobile.$invalid">
+                            <li class="parsley-required" ng-show="frmDistributor.contact_name.$error.required">Contact mobile
+                                is required
+                            </li>
+                            <li class="parsley-required" ng-show="frmDistributor.contact_name.$error.length">Must be 10 digits
                             </li>
                         </ul>
                     </div>
@@ -56,7 +71,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="territory">Territory</label>
-                        <select name="territory" id="territory" ng-model="model.territory">
+                        <select class="form-control" name="territory" id="territory" ng-model="model.territory">
                             <option>North</option>
                             <option>South</option>
                             <option>East</option>

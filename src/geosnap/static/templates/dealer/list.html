@@ -39,7 +39,7 @@
                         <tbody>
                         <tr ng-repeat="item in dealers" ng-class="{'text-danger': !item.status}">
                             <td>{{getDistrictName(item.district_id.$oid)}}</td>
-                            <td><a href="#/dealer/{{item._id.$oid}}"
+                            <td><a href="#/dealer/{{item._id.$oid}}?district_id={{item.district_id.$oid}}"
                                    title="Click to edit this item!">{{item.name}}</a></td>
                             <td>{{item.contact_name}}</td>
                             <td>{{item.phone}}</td>

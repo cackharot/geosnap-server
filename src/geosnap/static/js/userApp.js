@@ -19,12 +19,17 @@ userApp.controller('userListCtrl', function($route, $scope, $http, $routeParams,
              $scope.reloadUsers()
         })
 	}
+
+	$scope.canEdit = function(roles) {
+	    return _.contains(roles, 'super_admin') == false
+	}
 })
 
 userApp.controller('userDetailCtrl', function($scope, $http, $routeParams, $location){
 	$scope.model = {}
 	$scope.distributors = []
-	$scope.roles = [{'id': 'admin', 'text': 'Admin'}]
+	$scope.roles = [{'id': 'admin', 'text': 'Admin'}, {'id': 'aso', 'text': 'ASO'}]
+
 	$http.get('/api/user/'+ $routeParams.id).success(function(d){
         if(!d._id || !d._id.$oid)
             d._id = { "$oid": "-1" }

@@ -21,7 +21,7 @@ siteApp.controller('siteListCtrl', function($scope, $http, $routeParams){
         }else{
             $scope.setDistrict($scope.selected_district_id)
         }
-        $scope.districts.push({"_id":{"$oid":''}, 'name': 'All'})
+        //$scope.districts.push({"_id":{"$oid":''}, 'name': 'All'})
     }).error(function(e){
         alert('Error while fetching districts details')
         $location.path('/site')
@@ -54,11 +54,18 @@ siteApp.controller('siteListCtrl', function($scope, $http, $routeParams){
 siteApp.controller('siteDetailCtrl', function($scope, $routeParams, $location, $http, FileUploader){
     var id = $routeParams.id || -1
     $scope.district_id = $routeParams.district_id || ''
-	$scope.model = {}
+	$scope.model = { 'district_id': { '$oid': $scope.district_id }}
+    $scope.consumption_centers = []
+
+	$http.get('/api/district/' + $scope.district_id).success(function(d){
+        $scope.consumption_centers = d.centers || []
+    })
 
     $http.get('/api/site/' + id).success(function(d){
-        if(!d._id || !d._id.$oid)
+        if(!d._id || !d._id.$oid) {
             d._id = { "$oid": "-1" }
+            d.district_id = { '$oid': $scope.district_id }
+        }
         $scope.model = d
     }).error(function(e){
         alert('Error while fetching site details')

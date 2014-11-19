@@ -2,7 +2,7 @@
      ng-controller="siteDetailCtrl">
     <h3>
         <div class="pull-right">
-            <a href="#/site" class="btn btn-default" title="Go back"><em class="fa fa-arrow-left"></em>&nbsp;Back</a>
+            <a href="#/site?district_id={{model.district_id.$oid}}" class="btn btn-default" title="Go back"><em class="fa fa-arrow-left"></em>&nbsp;Back</a>
             <button class="btn btn-primary" type="submit" ng-click="save()" ng-disabled="frmSite.$invalid"><em
                     class="fa fa-save"></em>&nbsp;Save
             </button>
@@ -98,7 +98,7 @@
                     <div class="clearfix">
                         <div class="pull-left"></div>
                         <div class="pull-right">
-                            <a class="btn btn-default" href="#/site" title="Go back!">Cancel</a>
+                            <a class="btn btn-default" href="#/site?district_id={{model.district_id.$oid}}" title="Go back!">Cancel</a>
                             <button class="btn btn-primary" type="submit" ng-disabled="frmSite.$invalid"><em
                                     class="fa fa-save"></em>&nbsp;Save
                             </button>
