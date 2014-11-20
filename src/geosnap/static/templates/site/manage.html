@@ -131,6 +131,7 @@
                                ng-class="{ 'parsley-error' : frmSite.longitude.$invalid && !frmSite.longitude.$pristine }"
                                ng-model="model.location.longitude"/>
                     </div>
+                    <button type="button" ng-click="locateFromMap()">Locate</button>
                 </div>
                 <div class="panel-footer">
                     <div class="clearfix">

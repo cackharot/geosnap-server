@@ -16,7 +16,8 @@
                 </ul>
             </div>
             <div class="pull-right">
-                <a href="#/site/-1?district_id={{selected_district_id}}" class="btn btn-success" title="Create new site"><em
+                <a href="#/site/-1?district_id={{selected_district_id}}" class="btn btn-success"
+                   title="Create new site"><em
                         class="fa fa-plus"></em>&nbsp;New</a>
             </div>
         </div>
@@ -42,7 +43,13 @@
                             </td>
                             <td>{{item.square_feet}}</td>
                             <td>{{item.consumption}}</td>
-                            <td>{{item.location.latitude}}, {{item.location.longitude}}</td>
+                            <td>
+                                <a href="http://maps.google.com/maps?q={{item.location.latitude}},{{item.location.longitude}}"
+                                   title="Show on map" target="_blank">
+                                    {{item.location.latitude | fixed_point}},
+                                    {{item.location.longitude | fixed_point}}
+                                </a>
+                            </td>
                             <td class="text-center">
                                 <a href title="Click to delete site" ng-click="deleteSite(item._id.$oid)"><em
                                         class="fa fa-trash"></em></a>

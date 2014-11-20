@@ -136,4 +136,55 @@ siteApp.controller('siteDetailCtrl', function($scope, $routeParams, $location, $
                console.log(e)
            })
     }
+
+    $scope.locateFromMap = function(){
+        mapWindow = mapWindow || window.open('/static/templates/site/gmap.html');
+        mapWindow.onload = function() {
+            mapWindow.onunload  = function(e){
+                mapWindow = null
+            }
+        }
+    }
 })
+
+var mapWindow = null;
+
+function initialize() {
+  var mapOptions = {
+    zoom: 4,
+    center: new google.maps.LatLng(-25.363882, 131.044922)
+  };
+
+  mapWindow = mapWindow || window.open('');
+
+  var canvas = mapWindow.document.getElementById('map-canvas');
+
+  if(!canvas){
+    mapWindow.document.write('');
+    canvas = mapWindow.document.getElementById('map-canvas');
+  }
+
+  var map = new google.maps.Map(canvas,mapOptions);
+
+  var marker = new google.maps.Marker({
+    position: map.getCenter(),
+    map: map,
+    title: 'Click to zoom'
+  });
+
+  google.maps.event.addListener(map, 'center_changed', function() {
+    // 3 seconds after the center of the map has changed, pan back to the
+    // marker.
+    window.setTimeout(function() {
+      map.panTo(marker.getPosition());
+    }, 3000);
+  });
+
+  google.maps.event.addListener(marker, 'click', function(e) {
+    map.setZoom(8);
+    map.setCenter(marker.getPosition());
+    console.log(e);
+  });
+}
+// google.maps.event.addDomListener(window, 'load', initialize);
+

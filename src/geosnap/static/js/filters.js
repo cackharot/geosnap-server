@@ -38,3 +38,8 @@ angular.module('fbFilters', [])
       return input || '/static/images/na-product.jpg'
     }
 })
+.filter('fixed_point', function(){
+    return function(input){
+        return parseFloat(input).toFixed(2)
+    }
+})
