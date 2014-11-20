@@ -59,6 +59,7 @@ target/
 activate.bat
 .idea/
 out/
+src/geosnap/static/images/sites/*
 *.iml
 *.ipr
 *.iws

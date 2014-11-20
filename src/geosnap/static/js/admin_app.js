@@ -115,6 +115,7 @@ geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams
         $http.get('/logout')
         .success(function(data){
             $scope.app.user = {}
+            $scope.app.login = { 'username': '', 'password': ''}
             $scope.app.show_login = true
         })
         .error(function(e){

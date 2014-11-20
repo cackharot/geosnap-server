@@ -1,3 +1,5 @@
+import os
+from uuid import uuid4
 from flask import Flask, session, render_template, make_response, request, redirect, g
 from flask_login import LoginManager, login_user, login_required, logout_user
 from flask_pymongo import PyMongo
@@ -5,6 +7,7 @@ from flask_restful import Api
 from pymongo import Connection
 from bson import json_util
 import json
+from werkzeug.utils import secure_filename
 from geosnap.service.UserService import UserService
 
 app = Flask(__name__, instance_relative_config=False)
@@ -109,6 +112,22 @@ def recreate_db():
     c = Connection()
     c.drop_database(app.config['MONGO_DBNAME'])
     return redirect('/')
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+upload_folder = os.path.join(APP_ROOT, 'static/images/sites/')
+
+def allowed_files(filename):
+    return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
+
+@app.route("/upload_site_images", methods=['GET', 'POST'])
+def upload_site_images():
+    if request.files and len(request.files) > 0 and request.files['file']:
+        file_body = request.files['file']
+        if allowed_files(secure_filename(file_body.filename)):
+            filename = secure_filename(str(uuid4()) + "." + file_body.filename.split('.')[1])
+            file_body.save(os.path.join(upload_folder, filename))
+            return json.dumps({"status": "success", "id": filename, "filename": filename})
+    return '', 404
 
 
 from geosnap.resources.user import UserApi, UserListApi
