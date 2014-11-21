@@ -101,6 +101,7 @@ geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams
                 window.app_user = data
                 $scope.updateMenus()
                 $scope.app.show_login = false
+                $location.path('/')
                 //window.location.reload()
             })
             .error(function(e){
