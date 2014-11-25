@@ -33,9 +33,6 @@ geoSnapAdmin.config(['$routeProvider', function($routeProvider){
 	for(var i=0; i < items.length; ++i){
         var item = items[i]
         if(item.heading) continue
-        if(!isAccessible(item.roles)) {
-            continue
-        }
 
         $routeProvider.when(item.url,{
         		action: item.templateUrl,
@@ -58,7 +55,7 @@ geoSnapAdmin.config(['$routeProvider', function($routeProvider){
 })
 
 
-geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams){
+geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams, $location){
 	$scope.app = {}
 	$scope.app.login = { 'username': '', 'password': ''}
 	$scope.app.show_login = false
@@ -118,6 +115,7 @@ geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams
             $scope.app.user = {}
             $scope.app.login = { 'username': '', 'password': ''}
             $scope.app.show_login = true
+            $location.path('/')
         })
         .error(function(e){
             alert(e)
