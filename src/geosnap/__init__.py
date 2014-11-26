@@ -27,6 +27,29 @@ def _login(user_id):
     setattr(g, 'user', user)
     return user
 
+@login_manager.request_loader
+def load_user_from_request(request):
+
+    # first, try to login using the api_key url arg
+    api_key = request.args.get('api_key')
+
+    if not api_key:
+        # next, try to login using Basic Auth
+        api_key = request.headers.get('Authorization')
+        if api_key:
+            api_key = api_key.replace('Basic ', '', 1)
+            try:
+                api_key = base64.b64decode(api_key)
+            except TypeError:
+                pass
+
+    if api_key and api_key == "TEtORDg5JiUjQCFOREZITEtE":
+        user = get_user("546c9cfab41d060da01713df")
+        setattr(g, 'user', user)
+        return user
+    # finally, return None if both methods did not login the user
+    return None
+
 
 class User(object):
     def __init__(self, user_id='', name='', email='', roles=[]):
@@ -53,20 +76,11 @@ class User(object):
         return self.roles and len(self.roles) > 0 and "super_admin" in self.roles
 
 
-@app.before_request
-def set_user_on_request_g():
-    if 'user_id' not in session:
-        setattr(g, 'user', User())
-        return
-    elif getattr(g, 'user', None) is None:
-        _login(session['user_id'])
-
-
 def get_user(_id):
     service = UserService(mongo.db)
     user = service.get_by_id(_id)
     if not user:
-        return User()
+        return None
     return User(str(user['_id']), user['name'], user['email'], user['roles'])
 
 

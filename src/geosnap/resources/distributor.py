@@ -4,6 +4,8 @@ from flask_login import login_required
 from flask_restful import Resource
 from geosnap import mongo, UserService
 from geosnap.service.DistributorService import DistributorService
+from geosnap.service.DistrictService import DistrictService
+from geosnap.service.DealerService import DealerService
 
 
 class DistributorListApi(Resource):
@@ -12,14 +14,26 @@ class DistributorListApi(Resource):
     def __init__(self):
         self.service = DistributorService(mongo.db)
         self.user_service = UserService(mongo.db)
+        self.district_service = DistrictService(mongo.db)
+        self.dealer_service = DealerService(mongo.db)
 
     def get(self):
         distributor_ids = []
-        if not g.user.is_super_admin():
-            user = self.user_service.get_by_id(g.user.get_id())
+        if g.user and not g.user.is_super_admin():
+            user_id = g.user.get_id()
+            user = self.user_service.get_by_id(user_id)
             distributor_ids = user['distributors']
 
         lst = self.service.search(ids=distributor_ids)
+        load_all = bool(request.args.get('load_all', False))
+
+        if load_all and lst is not None and len(lst) > 0:
+            for item in lst:
+                districts = item['districts'] = self.district_service.search(distributor_ids=[str(item['_id'])])
+                if districts and len(districts):
+                    for d in districts:
+                        d['dealers'] = self.dealer_service.search(district_id=str(d['_id']))
+                        print(d['dealers'])
         return lst
 
 class DistributorApi(Resource):
