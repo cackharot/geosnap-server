@@ -33,7 +33,6 @@ class DistributorListApi(Resource):
                 if districts and len(districts):
                     for d in districts:
                         d['dealers'] = self.dealer_service.search(district_id=str(d['_id']))
-                        print(d['dealers'])
         return lst
 
 class DistributorApi(Resource):
