@@ -7,6 +7,7 @@ from flask_restful import Api
 from pymongo import Connection
 from bson import json_util
 import json
+import base64
 from werkzeug.utils import secure_filename
 from geosnap.service.UserService import UserService
 
@@ -27,9 +28,9 @@ def _login(user_id):
     setattr(g, 'user', user)
     return user
 
+
 @login_manager.request_loader
 def load_user_from_request(request):
-
     # first, try to login using the api_key url arg
     api_key = request.args.get('api_key')
 
@@ -113,6 +114,25 @@ def login():
     return "Invalid credentials", 400
 
 
+@app.route('/validate_user', methods=['POST'])
+def validate_user():
+    username = request.json['email']
+    password = request.json['password']
+    print(request.json)
+    if username and password:
+        service = UserService(mongo.db)
+        if service.validate_user(username, password):
+            user = service.get_by_email(username)
+            user['api_key'] = "TEtORDg5JiUjQCFOREZITEtE"
+            return json.dumps(
+                {'status': 'success',
+                 '_id': str(user['_id']),
+                 'name': user['name'],
+                 'roles': user['roles'],
+                 'api_key': user['api_key']})
+    return json.dumps({'status': 'error', 'message': 'Invalid credentials', 'api_key': None})
+
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -127,11 +147,14 @@ def recreate_db():
     c.drop_database(app.config['MONGO_DBNAME'])
     return redirect('/')
 
+
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 upload_folder = os.path.join(APP_ROOT, 'static/images/sites/')
 
+
 def allowed_files(filename):
     return '.' in filename and filename.split('.')[1] in ['jpg', 'png', 'gif', 'jpeg', 'bmp']
+
 
 @app.route("/upload_site_images", methods=['GET', 'POST'])
 def upload_site_images():

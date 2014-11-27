@@ -40,8 +40,10 @@ class UserService(object):
         query = {'email': username, 'password': password}
         return self.users.find(query).count() > 0
 
-    def search(self):
+    def search(self, email=None):
         query = {}
+        if email is not None:
+            query['email'] = email
         return [x for x in self.users.find(query)]
 
     def delete(self, id):

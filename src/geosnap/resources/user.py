@@ -5,6 +5,7 @@ from flask_restful import Resource
 from geosnap import mongo, UserService
 from geosnap.service.UserService import UserServiceException, DuplicateUserException
 
+
 class UserListApi(Resource):
     method_decorators = [login_required]
 
@@ -12,8 +13,10 @@ class UserListApi(Resource):
         self.service = UserService(mongo.db)
 
     def get(self):
-        lst = self.service.search()
+        email = request.args.get('email', None)
+        lst = self.service.search(email=email)
         return lst
+
 
 class UserApi(Resource):
     method_decorators = [login_required]
@@ -36,7 +39,7 @@ class UserApi(Resource):
         item['username'] = item['email']
         try:
             self.service.update(item)
-            return {"status": "success",  "data": item}
+            return {"status": "success", "data": item}
         except DuplicateUserException as e:
             print(e)
             return {"status": "error", "message": "User email already exists."}
