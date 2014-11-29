@@ -1,4 +1,5 @@
 # Set the path
+import base64
 import sys
 import os
 
@@ -17,11 +18,14 @@ def setup():
 
     if not item:
         print("Create admin user")
+        api_key = "LKND89&%#@!NDFHLKD"
         item = {"name": "admin", "username": 'admin', "email": 'admin@geosnap.in', "registered_ip": "10.0.0.1",
-                'roles': ['super_admin', 'admin'], 'password': 'pass@123'}
+                'roles': ['super_admin', 'admin'], 'password': 'pass@123',
+                'api_key': api_key}
         user_service.create(item)
     else:
         print(item)
+
 
 if __name__ == "__main__":
     print("Initializing database...")

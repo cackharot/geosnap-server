@@ -15,9 +15,14 @@ custom_routes.push({"title": "Manage District", "heading": false, "url": "/distr
 custom_routes.push({"title": "Manage Dealer", "heading": false, "url": "/dealer/:id", "templateUrl": '/static/templates/dealer/manage.html'})
 custom_routes.push({"title": "Manage Site", "heading": false, "url": "/site/:id", "templateUrl": '/static/templates/site/manage.html'})
 
-var isAccessible = function(roles){
+var isAccessible = function(roles, user_roles){
     if(roles && roles.length > 0){
-        var user_roles = window.app_user.roles || []
+        user_roles = user_roles || window.app_user.roles || []
+
+        if(user_roles.length == 0){
+            return false
+        }
+
         var valid = true
         _.forEach(roles, function(x){
             valid = valid && _.contains(user_roles, x)
@@ -71,7 +76,9 @@ geoSnapAdmin.controller('mainCtrl', function($route, $scope, $http, $routeParams
     $scope.menuItems = []
 
     $scope.updateMenus = function(){
-        $scope.menuItems = _.filter(menuItems,function(item){ return isAccessible(item.roles); })
+        $scope.menuItems = _.filter(menuItems, function(item) {
+            return isAccessible(item.roles, $scope.app.user.roles);
+        })
     }
 
     $scope.updateMenus()

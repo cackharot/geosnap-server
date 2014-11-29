@@ -23,12 +23,17 @@ class UserService(object):
         self.db = db
         self.users = self.db.user_collection
 
+    def generate_api_key(self):
+        return "TEtORDg5JiUjQCFOREZITEtE"
+
     def create(self, item):
         if self.user_exists(item['email']):
             raise DuplicateUserException()
         item.pop('_id', None)
         item['created_at'] = datetime.now()
         item['status'] = True
+        if 'api_key' not in item:
+            item['api_key'] = self.generate_api_key()
         if 'roles' not in item or item['roles'] is None or len(item['roles']) == 0:
             item['roles'] = ['member']
         return self.users.insert(item)
@@ -56,6 +61,9 @@ class UserService(object):
 
     def get_by_id(self, id):
         return self.users.find_one({"_id": ObjectId(id)})
+
+    def get_by_api_key(self, api_key):
+        return self.users.find_one({"api_key": api_key})
 
     def update(self, item):
         if item['_id'] is None:

@@ -1,3 +1,4 @@
+import base64
 import os
 from uuid import uuid4
 from flask import Flask, session, render_template, make_response, request, redirect, g
@@ -35,25 +36,21 @@ def load_user_from_request(request):
     api_key = request.args.get('api_key')
 
     if not api_key:
-        # next, try to login using Basic Auth
         api_key = request.headers.get('Authorization')
         if api_key:
             api_key = api_key.replace('Basic ', '', 1)
-            try:
-                api_key = base64.b64decode(api_key)
-            except TypeError:
-                pass
+    try:
+        api_key = base64.b64decode(api_key).decode('utf-8')
+    except TypeError:
+        pass
 
-    if api_key and api_key == "TEtORDg5JiUjQCFOREZITEtE":
-        user = get_user("546c9cfab41d060da01713df")
-        setattr(g, 'user', user)
-        return user
-    # finally, return None if both methods did not login the user
+    if api_key:
+        return get_user_by_api_key(api_key)
     return None
 
 
 class User(object):
-    def __init__(self, user_id='', name='', email='', roles=[]):
+    def __init__(self, user_id='', name='', email='', roles=None):
         if not roles:
             roles = []
         self.user_id = user_id
@@ -68,7 +65,7 @@ class User(object):
         return self.is_authenticated()
 
     def is_anonymous(self):
-        return False
+        return 'anonymous' in self.roles
 
     def get_id(self):
         return self.user_id
@@ -80,6 +77,14 @@ class User(object):
 def get_user(_id):
     service = UserService(mongo.db)
     user = service.get_by_id(_id)
+    if not user:
+        return None
+    return User(str(user['_id']), user['name'], user['email'], user['roles'])
+
+
+def get_user_by_api_key(api_key):
+    service = UserService(mongo.db)
+    user = service.get_by_api_key(api_key)
     if not user:
         return None
     return User(str(user['_id']), user['name'], user['email'], user['roles'])
@@ -123,7 +128,8 @@ def validate_user():
         service = UserService(mongo.db)
         if service.validate_user(username, password):
             user = service.get_by_email(username)
-            user['api_key'] = "TEtORDg5JiUjQCFOREZITEtE"
+            if 'api_key' not in user:
+                user['api_key'] = "TEtORDg5JiUjQCFOREZITEtE"
             return json.dumps(
                 {'status': 'success',
                  '_id': str(user['_id']),
