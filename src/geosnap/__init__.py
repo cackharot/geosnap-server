@@ -45,7 +45,9 @@ def load_user_from_request(request):
         pass
 
     if api_key:
-        return get_user_by_api_key(api_key)
+        user = get_user_by_api_key(api_key)
+        setattr(g, 'user', user)
+        return user
     return None
 
 
