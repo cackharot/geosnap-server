@@ -53,7 +53,6 @@ class UserApi(Resource):
         item['username'] = item['email']
         item['registered_ip'] = request.remote_addr
         try:
-            print(item)
             _id = self.service.create(item)
             return {"status": "success", "location": "/api/user/" + str(_id)}
         except DuplicateUserException as e:

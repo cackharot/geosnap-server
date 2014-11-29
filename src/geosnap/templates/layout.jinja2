@@ -21,7 +21,7 @@
     </section>
 </div>
 
-<div id="loginBox" class="login" ng-class="{'show':app.show_login}"  ng-show="app.show_login">
+<div id="loginBox" class="login" ng-class="{'show':app.show_login}" ng-show="app.show_login">
     <!--<div class="login-header">
         <button type="button" class="close" data-dismiss="modal" ng-click="app.show_login=false"><span
                 aria-hidden="true">&times;</span><span
@@ -29,6 +29,7 @@
     </div>-->
     <div class="login-body">
         <h2>Login</h2>
+
         <div class="line"></div>
         <form ng-submit="doLogin()">
             <div class="form-group">
@@ -70,11 +71,14 @@
 <script src="{{ url_for('static', filename='js/siteApp.js') }}"></script>
 <script src="{{ url_for('static', filename='js/directives.js') }}"></script>
 <script>
-        app_user = {};
+        app_user = { id: '', name: '', roles: []};
+        {% if g.user %}
         app_user.id = "{{g.user.user_id}}";
         app_user.name = "{{g.user.name}}";
         app_user.roles = "{{g.user.roles}}";
+        {% endif %}
         window.app_user = app_user;
+
 
 </script>
 </body>

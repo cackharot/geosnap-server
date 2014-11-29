@@ -123,7 +123,6 @@ def login():
 def validate_user():
     username = request.json['email']
     password = request.json['password']
-    print(request.json)
     if username and password:
         service = UserService(mongo.db)
         if service.validate_user(username, password):

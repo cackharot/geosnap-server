@@ -1,4 +1,6 @@
 from datetime import datetime
+import random
+import string
 from bson import ObjectId
 
 
@@ -24,7 +26,8 @@ class UserService(object):
         self.users = self.db.user_collection
 
     def generate_api_key(self):
-        return "TEtORDg5JiUjQCFOREZITEtE"
+        s = string.ascii_letters + string.digits
+        return ''.join(random.sample(s, 20))
 
     def create(self, item):
         if self.user_exists(item['email']):
