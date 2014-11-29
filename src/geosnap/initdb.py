@@ -18,7 +18,7 @@ def setup():
 
     if item:
         print('Deleting previous admin user')
-        user_service.delete(str(item['_id'])
+        user_service.delete(str(item['_id']))
 
     print("Creating admin user...")
     api_key = "LKND89&%#@!NDFHLKD"
